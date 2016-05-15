@@ -29,7 +29,6 @@ po/zh_TW.gmo
 src/.deps/
 src/Makefile
 src/Makefile.in
-src/main-2.c
 src/main.o
 src/ttsubset/.deps/
 src/ttsubset/Makefile

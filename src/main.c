@@ -19,6 +19,7 @@
 
 #include <sys/stat.h>
 #include <string.h>
+#include <glib.h>
 #include <gtk/gtk.h>
 #include <glib/gstdio.h>
 #include <libgnomecanvas/libgnomecanvas.h>
@@ -30,6 +31,7 @@
 #include "xo-misc.h"
 #include "xo-file.h"
 #include "xo-paint.h"
+#include "xo-print.h"
 #include "xo-shapes.h"
 
 GtkWidget *winMain;
@@ -42,8 +44,25 @@ struct UndoItem *undo, *redo; // the undo and redo stacks
 
 double DEFAULT_ZOOM;
 
-void init_stuff (int argc, char *argv[])
+struct Options {
+    gboolean verbose;
+    gchar *export_filename;
+};
+
+static struct Options options;
+
+static GOptionEntry entries[] =
 {
+  { "verbose", 'v', 0, G_OPTION_ARG_NONE, &options.verbose, "Be verbose", NULL },
+  { "export", 'e', 0, G_OPTION_ARG_FILENAME, &options.export_filename, "Be verbose", NULL },
+  { NULL }
+};
+
+void init_stuff (int argc, char *argv[], const gboolean export_only)
+{
+
+
+
   GtkWidget *w;
   GList *dev_list;
   GdkDevice *device;
@@ -271,6 +290,7 @@ void init_stuff (int argc, char *argv[])
 
   // show everything...
   
+  if (!export_only)
   gtk_widget_show (winMain);
   update_cursor();
 
@@ -340,6 +360,35 @@ void init_stuff (int argc, char *argv[])
 int
 main (int argc, char *argv[])
 {
+
+  GError *error = NULL;
+  GOptionContext *context;
+
+  context = g_option_context_new ("");
+  g_option_context_add_main_entries (context, entries, GETTEXT_PACKAGE);
+  g_option_context_add_group (context, gtk_get_option_group (TRUE));
+  if (!g_option_context_parse (context, &argc, &argv, &error))
+    {
+      g_print ("option parsing failed: %s\n", error->message);
+      exit (1);
+    }
+
+  const gboolean export_only = (options.export_filename != NULL);
+
+  if (export_only) {
+      printf("No export filename is given.\n");
+  }
+  else {
+      printf("Export to: %s\n", options.export_filename);
+  }
+
+  for (int i = 0; i != argc; ++i) {
+      printf("%i: %s\n", i, argv[i]);
+  }
+
+
+
+
   gchar *path, *path1, *path2;
   
 #ifdef ENABLE_NLS
@@ -369,16 +418,22 @@ main (int argc, char *argv[])
    */
   winMain = create_winMain ();
   
-  init_stuff (argc, argv);
-  gtk_window_set_icon(GTK_WINDOW(winMain), create_pixbuf("xournal.png"));
-  
-  gtk_main ();
-  
-  if (bgpdf.status != STATUS_NOT_INIT) shutdown_bgpdf();
+  init_stuff (argc, argv, export_only);
 
-  save_mru_list();
-  autosave_cleanup(&ui.autosave_filename_list);
-  if (ui.auto_save_prefs) save_config_to_file();
+  if (export_only) {
+      print_to_pdf_cairo(options.export_filename);
+  }
+  else {
+      gtk_window_set_icon(GTK_WINDOW(winMain), create_pixbuf("xournal.png"));
+      
+      gtk_main ();
+      
+      if (bgpdf.status != STATUS_NOT_INIT) shutdown_bgpdf();
+
+      save_mru_list();
+      autosave_cleanup(&ui.autosave_filename_list);
+      if (ui.auto_save_prefs) save_config_to_file();
+    }
   
   return 0;
 }
