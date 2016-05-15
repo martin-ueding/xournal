@@ -58,7 +58,7 @@ static GOptionEntry entries[] =
   { NULL }
 };
 
-void init_stuff (int argc, char *argv[])
+void init_stuff (int argc, char *argv[], const gboolean export_only)
 {
 
 
@@ -96,7 +96,7 @@ void init_stuff (int argc, char *argv[])
   ui.default_page.bg->canvas_item = NULL;
   ui.layerbox_length = 0;
 
-  if (argc > 3 || (argc == 2 && argv[1][0] == '-')) {
+  if (argc > 2 || (argc == 2 && argv[1][0] == '-')) {
     printf(_("Invalid command line parameters.\n"
            "Usage: %s [filename.xoj]\n"), argv[0]);
     gtk_exit(0);
@@ -290,6 +290,7 @@ void init_stuff (int argc, char *argv[])
 
   // show everything...
   
+  if (!export_only)
   gtk_widget_show (winMain);
   update_cursor();
 
@@ -372,16 +373,19 @@ main (int argc, char *argv[])
       exit (1);
     }
 
-  if (options.export_filename == NULL) {
+  const gboolean export_only = (options.export_filename != NULL);
+
+  if (export_only) {
       printf("No export filename is given.\n");
   }
   else {
-      printf("%s\n", options.export_filename);
+      printf("Export to: %s\n", options.export_filename);
   }
 
   for (int i = 0; i != argc; ++i) {
       printf("%i: %s\n", i, argv[i]);
   }
+
 
 
 
@@ -414,10 +418,10 @@ main (int argc, char *argv[])
    */
   winMain = create_winMain ();
   
-  init_stuff (argc, argv);
+  init_stuff (argc, argv, export_only);
 
-  if (argc == 3) {
-      print_to_pdf_cairo(argv[2]);
+  if (export_only) {
+      print_to_pdf_cairo(options.export_filename);
   }
   else {
       gtk_window_set_icon(GTK_WINDOW(winMain), create_pixbuf("xournal.png"));
