@@ -21,7 +21,7 @@
   <signal name="delete_event" handler="on_winMain_delete_event" last_modification_time="Mon, 05 Dec 2005 03:21:33 GMT"/>
 
   <child>
-    <widget class="GtkVBox" id="vboxMain">
+    <widget class="GtkHBox" id="vboxMain">
       <property name="visible">True</property>
       <property name="homogeneous">False</property>
       <property name="spacing">0</property>
@@ -2101,7 +2101,7 @@
       <child>
 	<widget class="GtkToolbar" id="toolbarMain">
 	  <property name="visible">True</property>
-	  <property name="orientation">GTK_ORIENTATION_HORIZONTAL</property>
+	  <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
 	  <property name="toolbar_style">GTK_TOOLBAR_ICONS</property>
 	  <property name="tooltips">True</property>
 	  <property name="show_arrow">True</property>
@@ -2483,7 +2483,7 @@
       <child>
 	<widget class="GtkToolbar" id="toolbarPen">
 	  <property name="visible">True</property>
-	  <property name="orientation">GTK_ORIENTATION_HORIZONTAL</property>
+	  <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
 	  <property name="toolbar_style">GTK_TOOLBAR_ICONS</property>
 	  <property name="tooltips">True</property>
 	  <property name="show_arrow">True</property>
