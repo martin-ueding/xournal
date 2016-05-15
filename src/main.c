@@ -45,8 +45,8 @@ struct UndoItem *undo, *redo; // the undo and redo stacks
 double DEFAULT_ZOOM;
 
 struct Options {
-    gboolean verbose;
-    gchar *export_filename;
+  gboolean verbose;
+  gchar *export_filename;
 };
 
 static struct Options options;
@@ -60,8 +60,6 @@ static GOptionEntry entries[] =
 
 void init_stuff (int argc, char *argv[], const gboolean export_only)
 {
-
-
 
   GtkWidget *w;
   GList *dev_list;
@@ -364,29 +362,26 @@ main (int argc, char *argv[])
   GError *error = NULL;
   GOptionContext *context;
 
-  context = g_option_context_new ("");
-  g_option_context_add_main_entries (context, entries, GETTEXT_PACKAGE);
-  g_option_context_add_group (context, gtk_get_option_group (TRUE));
-  if (!g_option_context_parse (context, &argc, &argv, &error))
-    {
-      g_print ("option parsing failed: %s\n", error->message);
-      exit (1);
-    }
+  context = g_option_context_new("");
+  g_option_context_add_main_entries(context, entries, GETTEXT_PACKAGE);
+  g_option_context_add_group(context, gtk_get_option_group(TRUE));
+  if (!g_option_context_parse(context, &argc, &argv, &error)) {
+    g_print("option parsing failed: %s\n", error->message);
+    exit(1);
+  }
 
   const gboolean export_only = (options.export_filename != NULL);
 
   if (export_only) {
-      printf("No export filename is given.\n");
+    printf("No export filename is given.\n");
   }
   else {
-      printf("Export to: %s\n", options.export_filename);
+    printf("Export to: %s\n", options.export_filename);
   }
 
   for (int i = 0; i != argc; ++i) {
-      printf("%i: %s\n", i, argv[i]);
+    printf("%i: %s\n", i, argv[i]);
   }
-
-
 
 
   gchar *path, *path1, *path2;
@@ -421,20 +416,20 @@ main (int argc, char *argv[])
   init_stuff (argc, argv, export_only);
 
   if (export_only) {
-      print_to_pdf_cairo(options.export_filename);
+    print_to_pdf_cairo(options.export_filename);
   }
   else {
-      gtk_window_set_icon(GTK_WINDOW(winMain), create_pixbuf("xournal.png"));
-      
-      gtk_main ();
-      
-      if (bgpdf.status != STATUS_NOT_INIT) shutdown_bgpdf();
+    gtk_window_set_icon(GTK_WINDOW(winMain), create_pixbuf("xournal.png"));
 
-      save_mru_list();
-      autosave_cleanup(&ui.autosave_filename_list);
-      if (ui.auto_save_prefs) save_config_to_file();
-    }
-  
+    gtk_main();
+
+    if (bgpdf.status != STATUS_NOT_INIT) shutdown_bgpdf();
+
+    save_mru_list();
+    autosave_cleanup(&ui.autosave_filename_list);
+    if (ui.auto_save_prefs) save_config_to_file();
+  }
+
   return 0;
 }
 
