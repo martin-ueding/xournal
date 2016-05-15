@@ -30,6 +30,7 @@
 #include "xo-misc.h"
 #include "xo-file.h"
 #include "xo-paint.h"
+#include "xo-print.h"
 #include "xo-shapes.h"
 
 GtkWidget *winMain;
@@ -77,7 +78,7 @@ void init_stuff (int argc, char *argv[])
   ui.default_page.bg->canvas_item = NULL;
   ui.layerbox_length = 0;
 
-  if (argc > 2 || (argc == 2 && argv[1][0] == '-')) {
+  if (argc > 3 || (argc == 2 && argv[1][0] == '-')) {
     printf(_("Invalid command line parameters.\n"
            "Usage: %s [filename.xoj]\n"), argv[0]);
     gtk_exit(0);
@@ -370,15 +371,21 @@ main (int argc, char *argv[])
   winMain = create_winMain ();
   
   init_stuff (argc, argv);
-  gtk_window_set_icon(GTK_WINDOW(winMain), create_pixbuf("xournal.png"));
-  
-  gtk_main ();
-  
-  if (bgpdf.status != STATUS_NOT_INIT) shutdown_bgpdf();
 
-  save_mru_list();
-  autosave_cleanup(&ui.autosave_filename_list);
-  if (ui.auto_save_prefs) save_config_to_file();
+  if (argc == 3) {
+      print_to_pdf_cairo(argv[2]);
+  }
+  else {
+      gtk_window_set_icon(GTK_WINDOW(winMain), create_pixbuf("xournal.png"));
+      
+      gtk_main ();
+      
+      if (bgpdf.status != STATUS_NOT_INIT) shutdown_bgpdf();
+
+      save_mru_list();
+      autosave_cleanup(&ui.autosave_filename_list);
+      if (ui.auto_save_prefs) save_config_to_file();
+    }
   
   return 0;
 }
