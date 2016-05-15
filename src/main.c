@@ -413,7 +413,7 @@ main (int argc, char *argv[])
    * (except popup menus), just so that you see something after building
    * the project. Delete any components that you don't want shown initially.
    */
-  winMain = create_winMain ();
+  winMain = create_winMain (options.vertical);
   
   init_stuff (argc, argv, export_only);
 
