@@ -46,6 +46,7 @@ double DEFAULT_ZOOM;
 
 struct Options {
   gboolean verbose;
+  gboolean vertical;
   gchar *export_filename;
 };
 
@@ -54,7 +55,8 @@ static struct Options options;
 static GOptionEntry entries[] =
 {
   { "verbose", 'v', 0, G_OPTION_ARG_NONE, &options.verbose, "Be verbose", NULL },
-  { "export", 'e', 0, G_OPTION_ARG_FILENAME, &options.export_filename, "Be verbose", NULL },
+  { "vertical", '\0', 0, G_OPTION_ARG_NONE, &options.vertical, "Vertical layout", NULL },
+  { "export", 'e', 0, G_OPTION_ARG_FILENAME, &options.export_filename, "Export the file as PDF, exit", NULL },
   { NULL }
 };
 
