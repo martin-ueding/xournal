@@ -364,13 +364,14 @@ create_winMain (void)
   winMain = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_window_set_title (GTK_WINDOW (winMain), _("Xournal"));
 
-  vboxMain = gtk_vbox_new (FALSE, 0);
+  vboxMain = gtk_hbox_new (FALSE, 0);
   gtk_widget_show (vboxMain);
   gtk_container_add (GTK_CONTAINER (winMain), vboxMain);
 
   menubar = gtk_menu_bar_new ();
   gtk_widget_show (menubar);
   gtk_box_pack_start (GTK_BOX (vboxMain), menubar, FALSE, FALSE, 0);
+  gtk_menu_bar_set_pack_direction (GTK_MENU_BAR (menubar), GTK_PACK_DIRECTION_TTB);
 
   menuFile = gtk_menu_item_new_with_mnemonic (_("_File"));
   gtk_widget_show (menuFile);
@@ -1490,6 +1491,7 @@ create_winMain (void)
   gtk_widget_show (toolbarMain);
   gtk_box_pack_start (GTK_BOX (vboxMain), toolbarMain, FALSE, FALSE, 0);
   gtk_toolbar_set_style (GTK_TOOLBAR (toolbarMain), GTK_TOOLBAR_ICONS);
+  gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbarMain), GTK_ORIENTATION_VERTICAL);
   tmp_toolbar_icon_size = gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbarMain));
 
   saveButton = (GtkWidget*) gtk_tool_button_new_from_stock ("gtk-save");
@@ -1623,6 +1625,7 @@ create_winMain (void)
   gtk_widget_show (toolbarPen);
   gtk_box_pack_start (GTK_BOX (vboxMain), toolbarPen, FALSE, FALSE, 0);
   gtk_toolbar_set_style (GTK_TOOLBAR (toolbarPen), GTK_TOOLBAR_ICONS);
+  gtk_toolbar_set_orientation (GTK_TOOLBAR (toolbarPen), GTK_ORIENTATION_VERTICAL);
   tmp_toolbar_icon_size = gtk_toolbar_get_icon_size (GTK_TOOLBAR (toolbarPen));
 
   buttonPen = (GtkWidget*) gtk_radio_tool_button_new (NULL);
@@ -2004,7 +2007,7 @@ create_winMain (void)
   gtk_widget_show (scrolledwindowMain);
   gtk_box_pack_start (GTK_BOX (vboxMain), scrolledwindowMain, TRUE, TRUE, 0);
 
-  hbox1 = gtk_hbox_new (FALSE, 0);
+  hbox1 = gtk_vbox_new (FALSE, 0);
   gtk_widget_show (hbox1);
   gtk_box_pack_start (GTK_BOX (vboxMain), hbox1, FALSE, FALSE, 0);
 

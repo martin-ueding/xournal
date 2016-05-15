@@ -29,8 +29,8 @@
       <child>
 	<widget class="GtkMenuBar" id="menubar">
 	  <property name="visible">True</property>
-	  <property name="pack_direction">GTK_PACK_DIRECTION_LTR</property>
 	  <property name="child_pack_direction">GTK_PACK_DIRECTION_LTR</property>
+	  <property name="pack_direction">GTK_PACK_DIRECTION_TTB</property>
 
 	  <child>
 	    <widget class="GtkMenuItem" id="menuFile">
@@ -656,6 +656,7 @@
 		      <property name="visible">True</property>
 		      <property name="label" translatable="yes">New Pages Keep Background</property>
 		      <property name="use_underline">True</property>
+		      <property name="active">False</property>
 		      <signal name="activate" handler="on_journalNewPageKeepsBG_activate" last_modification_time="Mon, 26 May 2014 19:50:07 GMT"/>
 		    </widget>
 		  </child>
@@ -1580,8 +1581,8 @@
 			  <child>
 			    <widget class="GtkCheckMenuItem" id="optionsButtonMappings">
 			      <property name="visible">True</property>
-		 	      <property name="label" translatable="yes">_Eraser Tip</property>
-		 	      <property name="use_underline">True</property>
+			      <property name="label" translatable="yes">_Eraser Tip</property>
+			      <property name="use_underline">True</property>
 			      <property name="active">False</property>
 			      <signal name="activate" handler="on_optionsButtonMappings_activate" last_modification_time="Thu, 26 Jan 2006 03:45:32 GMT"/>
 			    </widget>
@@ -1613,7 +1614,7 @@
 			      <property name="label" translatable="yes">_Touchscreen as Hand Tool</property>
 			      <property name="use_underline">True</property>
 			      <property name="active">False</property>
-			      <signal name="activate" handler="on_optionsTouchAsHandTool_activate" last_modification_time="Thu, 23 Mar 2014 03:45:32 GMT"/>
+			      <signal name="activate" handler="on_optionsTouchAsHandTool_activate" last_modification_time="Sun, 23 Mar 2014 03:45:32 GMT"/>
 			    </widget>
 			  </child>
 
@@ -1632,15 +1633,14 @@
 			      <property name="visible">True</property>
 			      <property name="label" translatable="yes">Designate as Touchscreen...</property>
 			      <property name="use_underline">True</property>
-			      <property name="active">False</property>
 			      <signal name="activate" handler="on_optionsDesignateTouchscreen_activate" last_modification_time="Sat, 24 May 2014 22:16:32 GMT"/>
 			    </widget>
 			  </child>
+			</widget>
+		      </child>
+		    </widget>
+		  </child>
 
-		         </widget>
-			</child>
-		       </widget>
-		     </child>
 		  <child>
 		    <widget class="GtkMenuItem" id="button2_mapping">
 		      <property name="visible">True</property>
@@ -1977,7 +1977,7 @@
 		      <property name="label" translatable="yes">Layers in PDF Export</property>
 		      <property name="use_underline">True</property>
 		      <property name="active">False</property>
-		      <signal name="activate" handler="on_optionsLayersPDFExport_activate" last_modification_time="Sat, 4 Jul 2015 20:42:27 GMT"/>
+		      <signal name="activate" handler="on_optionsLayersPDFExport_activate" last_modification_time="Sat, 04 Jul 2015 20:42:27 GMT"/>
 		    </widget>
 		  </child>
 
@@ -3227,7 +3227,7 @@
       </child>
 
       <child>
-	<widget class="GtkHBox" id="hbox1">
+	<widget class="GtkVBox" id="hbox1">
 	  <property name="visible">True</property>
 	  <property name="homogeneous">False</property>
 	  <property name="spacing">0</property>
