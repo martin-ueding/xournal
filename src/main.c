@@ -19,6 +19,7 @@
 
 #include <sys/stat.h>
 #include <string.h>
+#include <glib.h>
 #include <gtk/gtk.h>
 #include <glib/gstdio.h>
 #include <libgnomecanvas/libgnomecanvas.h>
@@ -43,8 +44,25 @@ struct UndoItem *undo, *redo; // the undo and redo stacks
 
 double DEFAULT_ZOOM;
 
+struct Options {
+    gboolean verbose;
+    gchar *export_filename;
+};
+
+static struct Options options;
+
+static GOptionEntry entries[] =
+{
+  { "verbose", 'v', 0, G_OPTION_ARG_NONE, &options.verbose, "Be verbose", NULL },
+  { "export", 'e', 0, G_OPTION_ARG_FILENAME, &options.export_filename, "Be verbose", NULL },
+  { NULL }
+};
+
 void init_stuff (int argc, char *argv[])
 {
+
+
+
   GtkWidget *w;
   GList *dev_list;
   GdkDevice *device;
@@ -341,6 +359,32 @@ void init_stuff (int argc, char *argv[])
 int
 main (int argc, char *argv[])
 {
+
+  GError *error = NULL;
+  GOptionContext *context;
+
+  context = g_option_context_new ("");
+  g_option_context_add_main_entries (context, entries, GETTEXT_PACKAGE);
+  g_option_context_add_group (context, gtk_get_option_group (TRUE));
+  if (!g_option_context_parse (context, &argc, &argv, &error))
+    {
+      g_print ("option parsing failed: %s\n", error->message);
+      exit (1);
+    }
+
+  if (options.export_filename == NULL) {
+      printf("No export filename is given.\n");
+  }
+  else {
+      printf("%s\n", options.export_filename);
+  }
+
+  for (int i = 0; i != argc; ++i) {
+      printf("%i: %s\n", i, argv[i]);
+  }
+
+
+
   gchar *path, *path1, *path2;
   
 #ifdef ENABLE_NLS
