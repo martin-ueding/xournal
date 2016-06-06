@@ -60,6 +60,46 @@ static GOptionEntry entries[] =
   { NULL }
 };
 
+void switch_layout(GtkContainer *container, GtkOrientation new_orientation) {
+  GtkWidget *new_container;
+  if (new_orientation == GTK_ORIENTATION_VERTICAL) {
+    new_container = gtk_vbox_new(FALSE, 0);
+  }
+  else {
+    new_container = gtk_hbox_new(FALSE, 0);
+  }
+
+  GtkWidget *parent = gtk_widget_get_parent(container);
+  GList *children = gtk_container_get_children(container);
+
+  GList *it;
+  for (it = children; it != NULL; it = it->next) {
+    gtk_widget_reparent(it->data, new_container);
+  }
+
+  gtk_container_remove(parent, container);
+  gtk_container_add(parent, new_container);
+}
+
+void switch_all(GtkWidget *winMain, GtkOrientation new_orientation) {
+  GList *children = gtk_container_get_children(winMain);
+
+  {
+    GList *it;
+    int i;
+    for (it = children, i = 0; it != NULL; it = it->next, ++i) {
+      if (i == 0) {
+        gtk_menu_bar_set_pack_direction(GTK_MENU_BAR(it->data), GTK_PACK_DIRECTION_TTB);
+      }
+      else if (i == 1 || i == 2) {
+        gtk_toolbar_set_orientation(GTK_TOOLBAR(it->data), GTK_ORIENTATION_VERTICAL);
+      }
+    }
+  }
+
+  //switch_layout(winMain
+}
+
 void init_stuff (int argc, char *argv[], const gboolean export_only)
 {
 
@@ -417,7 +457,7 @@ main (int argc, char *argv[])
    * the project. Delete any components that you don't want shown initially.
    */
   winMain = create_winMain (options.vertical);
-  
+
   init_stuff (argc, argv, export_only);
 
   if (export_only) {
