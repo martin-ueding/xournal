@@ -82,12 +82,14 @@ void switch_layout(GtkContainer *container, GtkOrientation new_orientation) {
 }
 
 void switch_all(GtkWidget *winMain, GtkOrientation new_orientation) {
-  GList *children = gtk_container_get_children(winMain);
+  GList *vbox_list = gtk_container_get_children(winMain);
+  GList *children = gtk_container_get_children(vbox_list->data);
 
   {
     GList *it;
     int i;
     for (it = children, i = 0; it != NULL; it = it->next, ++i) {
+      printf("Child %i\n", i);
       if (i == 0) {
         gtk_menu_bar_set_pack_direction(GTK_MENU_BAR(it->data), GTK_PACK_DIRECTION_TTB);
       }
@@ -457,6 +459,8 @@ main (int argc, char *argv[])
    * the project. Delete any components that you don't want shown initially.
    */
   winMain = create_winMain (options.vertical);
+
+  switch_all(winMain, GTK_ORIENTATION_VERTICAL);
 
   init_stuff (argc, argv, export_only);
 
