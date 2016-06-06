@@ -124,7 +124,9 @@ void switch_all(GtkWidget *winMain, GtkOrientation new_orientation) {
     g_list_free(children);
   }
 
-  //switch_layout(vbox, new_orientation);
+  GtkOrientation reversed_orientation = new_orientation == GTK_ORIENTATION_VERTICAL ? GTK_ORIENTATION_HORIZONTAL : GTK_ORIENTATION_VERTICAL;
+
+  switch_layout(vbox, reversed_orientation);
 }
 
 void init_stuff (int argc, char *argv[], const gboolean export_only)
