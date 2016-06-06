@@ -60,6 +60,9 @@ static GOptionEntry entries[] =
   { NULL }
 };
 
+/**
+ Switches the layout of the container to the new direction.
+ */
 void switch_layout(GtkContainer *container, GtkOrientation new_orientation) {
   GtkWidget *new_container;
   if (new_orientation == GTK_ORIENTATION_VERTICAL) {
@@ -69,7 +72,7 @@ void switch_layout(GtkContainer *container, GtkOrientation new_orientation) {
     new_container = gtk_hbox_new(FALSE, 0);
   }
 
-  GtkWidget *parent = gtk_widget_get_parent(container);
+  GtkContainer *parent = GTK_CONTAINER(gtk_widget_get_parent(GTK_WIDGET(container)));
   GList *children = gtk_container_get_children(container);
 
   GList *it;
@@ -77,13 +80,17 @@ void switch_layout(GtkContainer *container, GtkOrientation new_orientation) {
     gtk_widget_reparent(it->data, new_container);
   }
 
-  gtk_container_remove(parent, container);
-  gtk_container_add(parent, new_container);
+  gtk_container_remove(parent, GTK_WIDGET(container));
+  gtk_container_add(parent, GTK_WIDGET(new_container));
 }
 
+/**
+ Completely change the flow direction of the main window.
+ */
 void switch_all(GtkWidget *winMain, GtkOrientation new_orientation) {
-  GList *vbox_list = gtk_container_get_children(winMain);
-  GList *children = gtk_container_get_children(vbox_list->data);
+  // Take off the list head as this is the first child.
+  GtkContainer *vbox = GTK_CONTAINER(gtk_container_get_children(GTK_CONTAINER(winMain))->data);
+  GList *children = gtk_container_get_children(vbox);
 
   {
     GList *it;
@@ -99,7 +106,7 @@ void switch_all(GtkWidget *winMain, GtkOrientation new_orientation) {
     }
   }
 
-  //switch_layout(winMain
+  switch_layout(vbox, new_orientation);
 }
 
 void init_stuff (int argc, char *argv[], const gboolean export_only)
