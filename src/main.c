@@ -60,6 +60,8 @@ static GOptionEntry entries[] =
   { NULL }
 };
 
+#define D(expr) printf("%s\n", #expr); expr
+
 /**
  Switches the layout of the container to the new direction.
  */
@@ -72,49 +74,47 @@ void switch_layout(GtkContainer *container, GtkOrientation new_orientation) {
     new_container = gtk_hbox_new(FALSE, 0);
   }
 
-  GtkContainer *parent = GTK_CONTAINER(gtk_widget_get_parent(GTK_WIDGET(container)));
-  GList *children = gtk_container_get_children(container);
-
-  GList *it;
-  for (it = children; it != NULL; it = it->next) {
-    printf("gtk_widget_reparent(it->data, new_container);\n");
-    gtk_widget_reparent(it->data, new_container);
+  {
+    GList *children = gtk_container_get_children(container);
+    GList *it;
+    for (it = children; it != NULL; it = it->next) {
+      gtk_widget_reparent(it->data, new_container);
+    }
+    g_list_free(children);
   }
 
-  printf("gtk_container_remove(parent, GTK_WIDGET(container));\n");
-  gtk_container_remove(parent, GTK_WIDGET(container));
-  printf("gtk_widget_unparent(GTK_WIDGET(container));\n");
-  gtk_widget_unparent(GTK_WIDGET(container));
-  printf("gtk_container_add(parent, GTK_WIDGET(new_container));\n");
-  gtk_container_add(parent, GTK_WIDGET(new_container));
+  {
+    GtkContainer *parent = GTK_CONTAINER(gtk_widget_get_parent(GTK_WIDGET(container)));
+    gtk_container_remove(parent, GTK_WIDGET(container));
+    gtk_container_add(parent, GTK_WIDGET(new_container));
+  }
 }
 
 /**
  Completely change the flow direction of the main window.
  */
 void switch_all(GtkWidget *winMain, GtkOrientation new_orientation) {
-  // Take off the list head as this is the first child.
-  GtkContainer *vbox = GTK_CONTAINER(gtk_container_get_children(GTK_CONTAINER(winMain))->data);
-  GList *children = gtk_container_get_children(vbox);
+  GList *main_list = gtk_container_get_children(GTK_CONTAINER(winMain));
+  GtkContainer *vbox = GTK_CONTAINER(main_list->data);
+  g_list_free(main_list);
 
   {
+    GList *children = gtk_container_get_children(vbox);
     GList *it;
     int i;
     for (it = children, i = 0; it != NULL; it = it->next, ++i) {
       printf("Child %i\n", i);
       if (i == 0) {
-        printf("gtk_menu_bar_set_pack_direction(GTK_MENU_BAR(it->data), GTK_PACK_DIRECTION_TTB);\n");
         gtk_menu_bar_set_pack_direction(GTK_MENU_BAR(it->data), GTK_PACK_DIRECTION_TTB);
       }
       else if (i == 1 || i == 2) {
-        printf("gtk_toolbar_set_orientation(GTK_TOOLBAR(it->data), GTK_ORIENTATION_VERTICAL);\n");
         gtk_toolbar_set_orientation(GTK_TOOLBAR(it->data), GTK_ORIENTATION_VERTICAL);
       }
       else if (i == 4) {
-        printf("switch_layout(it->data, new_orientation);\n");
         switch_layout(it->data, new_orientation);
       }
     }
+    g_list_free(children);
   }
 
   //switch_layout(vbox, new_orientation);
