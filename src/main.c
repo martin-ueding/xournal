@@ -64,6 +64,9 @@ static GOptionEntry entries[] =
 
 /**
  Switches the layout of the container to the new direction.
+
+ A new container is created and all the children are reparented into the new
+ container. Then the old container is removed and the new one added.
  */
 void switch_layout(GtkContainer *container, GtkOrientation new_orientation) {
   GtkWidget *new_container;
@@ -87,11 +90,15 @@ void switch_layout(GtkContainer *container, GtkOrientation new_orientation) {
     GtkContainer *parent = GTK_CONTAINER(gtk_widget_get_parent(GTK_WIDGET(container)));
     gtk_container_remove(parent, GTK_WIDGET(container));
     gtk_container_add(parent, GTK_WIDGET(new_container));
+    gtk_widget_set_visible(GTK_WIDGET(new_container), TRUE);
   }
 }
 
 /**
  Completely change the flow direction of the main window.
+
+ The layout of the main container, a container within the UI and the layout of
+ the toolbars are flipped.
  */
 void switch_all(GtkWidget *winMain, GtkOrientation new_orientation) {
   GList *main_list = gtk_container_get_children(GTK_CONTAINER(winMain));
