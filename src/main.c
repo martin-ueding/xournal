@@ -82,6 +82,7 @@ void switch_layout(GtkContainer *container, GtkOrientation new_orientation) {
     GList *it;
     for (it = children; it != NULL; it = it->next) {
       gtk_widget_reparent(it->data, new_container);
+      gtk_widget_set_size_request(it->data, 20, 20);
     }
     g_list_free(children);
   }
@@ -105,6 +106,9 @@ void switch_all(GtkWidget *winMain, GtkOrientation new_orientation) {
   GtkContainer *vbox = GTK_CONTAINER(main_list->data);
   g_list_free(main_list);
 
+  GtkOrientation reversed_orientation = new_orientation == GTK_ORIENTATION_VERTICAL ? GTK_ORIENTATION_HORIZONTAL : GTK_ORIENTATION_VERTICAL;
+  switch_layout(vbox, reversed_orientation);
+
   {
     GList *children = gtk_container_get_children(vbox);
     GList *it;
@@ -113,20 +117,19 @@ void switch_all(GtkWidget *winMain, GtkOrientation new_orientation) {
       printf("Child %i\n", i);
       if (i == 0) {
         gtk_menu_bar_set_pack_direction(GTK_MENU_BAR(it->data), GTK_PACK_DIRECTION_TTB);
+        gtk_widget_set_size_request(it->data, 20, 20);
       }
       else if (i == 1 || i == 2) {
         gtk_toolbar_set_orientation(GTK_TOOLBAR(it->data), GTK_ORIENTATION_VERTICAL);
+        gtk_widget_set_size_request(it->data, 20, 20);
       }
       else if (i == 4) {
-        switch_layout(it->data, new_orientation);
+        //switch_layout(it->data, new_orientation);
+        gtk_widget_set_size_request(it->data, 20, 20);
       }
     }
     g_list_free(children);
   }
-
-  GtkOrientation reversed_orientation = new_orientation == GTK_ORIENTATION_VERTICAL ? GTK_ORIENTATION_HORIZONTAL : GTK_ORIENTATION_VERTICAL;
-
-  switch_layout(vbox, reversed_orientation);
 }
 
 void init_stuff (int argc, char *argv[], const gboolean export_only)
