@@ -381,8 +381,11 @@ main (int argc, char *argv[])
     printf("Export to: %s\n", options.export_filename);
   }
 
-  for (int i = 0; i != argc; ++i) {
-    printf("%i: %s\n", i, argv[i]);
+  {
+    int i;
+    for (i = 0; i != argc; ++i) {
+      printf("%i: %s\n", i, argv[i]);
+    }
   }
 
 
